@@ -14,11 +14,11 @@
 		"MediaWiki\\Extension\\Piwigo\\": "src/"
 	},
 	"config": {
-		"PiwigoURL": {
+		"wgPiwigoURL": {
 			"description": "The URL of the Piwigo setup to take images from",
 			"value": true
 		},
-		"PiwigoGalleryLayout": {
+		"wgPiwigoGalleryLayout": {
 			"description": "One of the four: fluid (default), grid, thumbnails, clean",
 			"value": false
 		}
@@ -44,6 +44,18 @@
 			"styles": [],
 			"packageFiles": [
 				"init.js"
+			],
+			"messages": []
+		},
+
+		"ext.baguetteBox": {
+			"localBasePath": "resources/ext.baguetteBox",
+			"remoteExtPath": "Piwigo/resources/ext.baguetteBox",
+			"dependencies": [],
+			"styles": [],
+			"packageFiles": [
+				"baguetteBox.min.css",
+				"baguetteBox.min.js"
 			],
 			"messages": []
 		}

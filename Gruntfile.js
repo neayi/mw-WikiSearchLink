@@ -28,7 +28,7 @@ module.exports = function ( grunt ) {
 			  expand: true,
 			  cwd: 'node_modules/baguettebox.js/dist',
 			  src: ['baguetteBox.min.css', 'baguetteBox.min.js'],
-			  dest: 'resources/ext.baguetteJS'
+			  dest: 'resources/ext.baguetteBox'
 			}
 		  }
 	} );

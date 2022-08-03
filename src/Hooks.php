@@ -28,9 +28,9 @@ class Hooks implements \MediaWiki\Hook\BeforePageDisplayHook {
 	 */
 	public function onBeforePageDisplay( $out, $skin ): void {
 		$config = $out->getConfig();
-		if ( $config->get( 'PiwigoVandalizeEachPage' ) ) {
-			$out->addModules( 'oojs-ui-core' );
-			$out->addHTML( \Html::element( 'p', [], 'Piwigo was here' ) );
+		if ( $config->get( 'wgPiwigoURL' ) ) {
+			// $out->addModules( 'oojs-ui-core' );
+			// $out->addHTML( \Html::element( 'p', [], 'Piwigo was here' ) );
 		}
 	}
 

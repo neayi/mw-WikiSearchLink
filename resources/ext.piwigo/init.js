@@ -3,4 +3,7 @@
  * @singleton
  */
 mw.Piwigo = {
+
 };
+
+console.log("Piwigo Hello world");
