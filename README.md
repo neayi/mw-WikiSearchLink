@@ -16,5 +16,5 @@ You will need to store the extension in ```extensions/Piwigo```, then add the fo
 ```
 wfLoadExtension( 'Piwigo' );
 $wgPiwigoURL = 'https://somegallery.piwigo.fr';
-$wgPiwigoGalleryLayour = 'fluid'; // one of the four: fluid (default), grid, thumbnails, clean
+$wgPiwigoGalleryLayout = 'fluid'; // one of the four: fluid (default), grid, thumbnails, clean
 ```
