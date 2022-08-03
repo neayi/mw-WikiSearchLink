@@ -1,0 +1,52 @@
+{
+	"name": "Piwigo",
+	"author": [
+		"Bertrand Gorge (Neayi)"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:Piwigo",
+	"descriptionmsg": "Piwigo-desc",
+	"license-name": "MIT License",
+	"type": "other",
+	"requires": {
+		"MediaWiki": ">= 1.35.0"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\Piwigo\\": "src/"
+	},
+	"config": {
+		"PiwigoURL": {
+			"description": "The URL of the Piwigo setup to take images from",
+			"value": true
+		},
+		"PiwigoGalleryLayout": {
+			"description": "One of the four: fluid (default), grid, thumbnails, clean",
+			"value": false
+		}
+	},
+	"HookHandlers": {
+		"PiwigoHooks": {
+			"class": "MediaWiki\\Extension\\Piwigo\\Hooks"
+		}
+	},
+	"Hooks": {
+		"BeforePageDisplay": "PiwigoHooks"
+	},
+	"MessagesDirs": {
+		"Piwigo": [
+			"i18n"
+		]
+	},
+	"ResourceModules": {
+		"ext.piwigo": {
+			"localBasePath": "resources/ext.piwigo",
+			"remoteExtPath": "Piwigo/resources/ext.piwigo",
+			"dependencies": [],
+			"styles": [],
+			"packageFiles": [
+				"init.js"
+			],
+			"messages": []
+		}
+	},
+	"manifest_version": 2
+}
