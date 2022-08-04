@@ -45,9 +45,11 @@
 			"localBasePath": "resources/ext.piwigo",
 			"remoteExtPath": "Piwigo/resources/ext.piwigo",
 			"dependencies": [],
-			"styles": [],
-			"packageFiles": [
-				"init.js"
+			"scripts": ["init.js"],
+			"styles": ["piwigo.css"],
+			"targets": [
+				"desktop",
+				"mobile"
 			],
 			"messages": []
 		},

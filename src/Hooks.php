@@ -81,17 +81,16 @@ class Hooks implements
 		Parser $parser,
 		PPFrame $frame
 	) {
-		// $parser->getOutput()->updateCacheExpiry( 0 );
-		// $cs = CommentStreams::singleton();
-		// $cs->enableCommentsOnPage();
 		$parser->getOutput()->addModules( 'ext.piwigo' );
 		$parser->getOutput()->addModules( 'ext.baguetteBox' );
 
 		$ret = '<div>This is the gallery</div>';
 
 		if ( isset( $args['tags'] ) ) {
-			$ret = '<div>This is the gallery for tag: '.$args['tags'].'</div>';
+			$ret = '<div>This is the gallery for tag: '.$args['tags'].'</div><div class="showPiwigo tz-gallery" data-tags="'.$args['tags'].'"></div>';
 		}
+
+
 		return $ret;
 	}
 
@@ -104,12 +103,14 @@ class Hooks implements
 	 * @return string HTML to insert in the page.
 	 */
 	public static function parserFunctionPiwigo( Parser $parser, string $value, ...$args ) {
+
+		$parser->getOutput()->addModules( 'ext.piwigo' );
+		$parser->getOutput()->addModules( 'ext.baguetteBox' );
+
 		$piwigo = [
 			'value' => $value,
 			'arguments' => $args,
 		];
-		$parser->getOutput()->addModules( 'ext.piwigo' );
-		$parser->getOutput()->addModules( 'ext.baguetteBox' );
 
 		return '<pre>piwigo Function: '
 			. htmlspecialchars( FormatJson::encode( $piwigo, /*prettyPrint=*/true ) )
