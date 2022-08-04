@@ -14,13 +14,13 @@
 		"MediaWiki\\Extension\\Piwigo\\": "src/"
 	},
 	"config": {
-		"wgPiwigoURL": {
+		"PiwigoURL": {
 			"description": "The URL of the Piwigo setup to take images from",
-			"value": true
+			"value": null
 		},
-		"wgPiwigoGalleryLayout": {
+		"PiwigoGalleryLayout": {
 			"description": "One of the four: fluid (default), grid, thumbnails, clean",
-			"value": false
+			"value": "fluid"
 		}
 	},
 	"HookHandlers": {
@@ -29,12 +29,16 @@
 		}
 	},
 	"Hooks": {
-		"BeforePageDisplay": "PiwigoHooks"
+		"BeforePageDisplay": "PiwigoHooks",
+		"ParserFirstCallInit": "PiwigoHooks"
 	},
 	"MessagesDirs": {
 		"Piwigo": [
 			"i18n"
 		]
+	},
+	"ExtensionMessagesFiles": {
+		"ExampleMagic": "Piwigo.i18n.magic.php"
 	},
 	"ResourceModules": {
 		"ext.piwigo": {
@@ -49,16 +53,21 @@
 		},
 
 		"ext.baguetteBox": {
+			"styles": ["baguetteBox.min.css"],
+			"scripts": ["baguetteBox.min.js"],
+			"targets": [
+				"desktop",
+				"mobile"
+			],
 			"localBasePath": "resources/ext.baguetteBox",
 			"remoteExtPath": "Piwigo/resources/ext.baguetteBox",
 			"dependencies": [],
-			"styles": [],
-			"packageFiles": [
-				"baguetteBox.min.css",
-				"baguetteBox.min.js"
-			],
 			"messages": []
 		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "resources",
+		"remoteExtPath": "Piwigo/resources"
 	},
 	"manifest_version": 2
 }
