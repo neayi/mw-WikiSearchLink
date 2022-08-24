@@ -29,7 +29,6 @@
 		}
 	},
 	"Hooks": {
-		"BeforePageDisplay": "PiwigoHooks",
 		"ParserFirstCallInit": "PiwigoHooks"
 	},
 	"MessagesDirs": {
