@@ -62,7 +62,7 @@ server {
 	client_max_body_size 0;
 
 	# CORS
-  add_header 'Access-Control-Allow-Origin' $allow_origin;
+    add_header 'Access-Control-Allow-Origin' $allow_origin;
 	add_header 'Access-Control-Allow-Methods' 'GET';
 
 	location / {
