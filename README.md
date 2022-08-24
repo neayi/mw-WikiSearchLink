@@ -32,3 +32,52 @@ wfLoadExtension( 'Piwigo' );
 $wgPiwigoURL = 'https://somegallery.piwigo.fr';
 $wgPiwigoGalleryLayout = 'fluid'; // one of the four: fluid (default), grid, thumbnails, clean
 ```
+
+## CORS setting on the Piwigo server ##
+
+If mediawiki and Piwigo are not hosted on the same domain, it will be necessary to setup CORS on Piwigo (so that Mediawiki's HTML can ping Piwigo's web services).
+
+In order to do that, you might want to use the following Nginx config file (Piwigo's docker setup):
+
+```
+map $http_origin $allow_origin {
+    ~^https?://(.*\.)?yourwikidomain.com(:\d+)?$ $http_origin;
+    ~^https?://(.*\.)?localhost(:\d+)?$ $http_origin;
+    default "";
+}
+
+server {
+	listen 80 default_server;
+
+	listen 443 ssl;
+
+	root /config/www/gallery;
+	index index.html index.htm index.php;
+
+	server_name _;
+
+	ssl_certificate /config/keys/cert.crt;
+	ssl_certificate_key /config/keys/cert.key;
+
+	client_max_body_size 0;
+
+	# CORS
+  add_header 'Access-Control-Allow-Origin' $allow_origin;
+	add_header 'Access-Control-Allow-Methods' 'GET';
+
+	location / {
+		try_files $uri $uri/ /index.html /index.php?$args =404;
+	}
+
+	location ~ \.php$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		# With php5-cgi alone:
+		fastcgi_pass 127.0.0.1:9000;
+		# With php5-fpm:
+		#fastcgi_pass unix:/var/run/php5-fpm.sock;
+		fastcgi_index index.php;
+		include /etc/nginx/fastcgi_params;
+
+	}
+}
+```
