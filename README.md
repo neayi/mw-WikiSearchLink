@@ -1,9 +1,15 @@
+
 # mw-Piwigo
 This is a mediawiki extension that displays a gallery of images extracted from a Piwigo setup
 
 ## What this does
 
 This extension adds a ```<piwigo />``` keyword and a ```{{#piwigo}}``` parser function that show a gallery in a page. The keyword can contain the same kind of parameters as Piwigo's URL (category, tags, ...):
+
+### Search parameter ###
+You can search for photos, including with a complex search, using the search parameter. See [here](https://fr.piwigo.org/doc/doku.php?id=utiliser:utilisation:fonctionnalites:recherche_rapide) for the syntax.
+
+That would give for example: ```{{#piwigo:search = tag:1-flowers red}}``` 
 
 ### Tags parameter ###
 You can select all photos for a given tag by using: ```{{#piwigo:tags=1-tagname}}``` or ```<piwigo tags="1-tagname"/>```  or ```<piwigo tags="1"/>``` (only the tag id is relevant).
@@ -17,6 +23,10 @@ The category parameter is used to select photos from an album. You cannot select
 
 ### Count parameter ###
 You can use the ```count``` parameter to limit the number of results: ```{{#piwigo: category = 5 | count = 10}}```  or ```<piwigo tags="1" count = 4/>```
+
+### Site parameter ###
+You may want to look up photos from another setup of Piwigo than the one defined by default in LocalSettings.php. In such case, simply add the site parameter:
+```{{#piwigo: category = 5 | count = 10 | site = https://yourpiwigosetup.com }}```
 
 ## Performance ##
 The images are loaded in JS which means that the page is effectively cached as any wiki page, and checks for new images only at display time.
@@ -33,51 +43,3 @@ $wgPiwigoURL = 'https://somegallery.piwigo.fr';
 $wgPiwigoGalleryLayout = 'fluid'; // one of the four: fluid (default), grid, thumbnails, clean
 ```
 
-## CORS setting on the Piwigo server ##
-
-If mediawiki and Piwigo are not hosted on the same domain, it will be necessary to setup CORS on Piwigo (so that Mediawiki's HTML can ping Piwigo's web services).
-
-In order to do that, you might want to use the following Nginx config file (Piwigo's docker setup):
-
-```
-map $http_origin $allow_origin {
-    ~^https?://(.*\.)?yourwikidomain.com(:\d+)?$ $http_origin;
-    ~^https?://(.*\.)?localhost(:\d+)?$ $http_origin;
-    default "";
-}
-
-server {
-	listen 80 default_server;
-
-	listen 443 ssl;
-
-	root /config/www/gallery;
-	index index.html index.htm index.php;
-
-	server_name _;
-
-	ssl_certificate /config/keys/cert.crt;
-	ssl_certificate_key /config/keys/cert.key;
-
-	client_max_body_size 0;
-
-	# CORS
-    add_header 'Access-Control-Allow-Origin' $allow_origin;
-	add_header 'Access-Control-Allow-Methods' 'GET';
-
-	location / {
-		try_files $uri $uri/ /index.html /index.php?$args =404;
-	}
-
-	location ~ \.php$ {
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-		# With php5-cgi alone:
-		fastcgi_pass 127.0.0.1:9000;
-		# With php5-fpm:
-		#fastcgi_pass unix:/var/run/php5-fpm.sock;
-		fastcgi_index index.php;
-		include /etc/nginx/fastcgi_params;
-
-	}
-}
-```
