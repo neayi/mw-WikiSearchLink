@@ -100,7 +100,10 @@ class Hooks implements
 			if (preg_match('@^([^=]+)=?(.*)$@', $argpair, $parts))
 			{
 				$k = strtolower(trim($parts[1]));
-				$value = trim(preg_replace('@-.*$@', '', $parts[2]));
+				if ($k != 'search')
+					$value = trim(preg_replace('@-.*$@', '', $parts[2]));
+				else
+					$value = $parts[2];
 
 				if (isset($parameters[$k]))
 				{
