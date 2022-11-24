@@ -17,50 +17,61 @@
                 var tags_multiple = piwigoDiv.data( "tags_multiple" );
                 var category = piwigoDiv.data( "category" );
                 var count = piwigoDiv.data( "count" );
-
-                self.getImages(tags, tags_multiple, category, count, piwigoDiv);
+                var search = piwigoDiv.data( "search" );
+                var site = piwigoDiv.data( "site" );
+                self.getImages(tags, tags_multiple, category, search, count, piwigoDiv, site);
             });
 
 		},
 
-        getImages: function (tags, tags_multiple, category, count, piwigoDiv) {
+        getImages: function (tags, tags_multiple, category, search, count, piwigoDiv, site) {
 
-            var piwigoRootURL = mw.config.get('Piwigo').wgPiwigoURL;
-            var piwigoWSURL = piwigoRootURL + "/ws.php?format=json";
+            var piwigoRootURL = '';
+            if (site !== undefined)
+                piwigoRootURL = site;
+            else
+                piwigoRootURL = mw.config.get('Piwigo').wgPiwigoURL;
+
             var piwigoURL = piwigoRootURL + '/?/';
 
-            if (tags !== undefined)
+            if (search !== undefined)
             {
-                piwigoWSURL = piwigoWSURL + "&method=pwg.tags.getImages&tag_id=" + tags;
+                piwigoURL = piwigoRootURL + '/qsearch.php?q=' + search;
+            }
+            else if (tags !== undefined)
+            {
                 piwigoURL = piwigoURL + 'tags/' + tags;
             }
             else if (tags_multiple !== undefined)
             {
-                piwigoWSURL = piwigoWSURL + "&method=pwg.tags.getImages&tag_id[]=" + tags_multiple.split(',').join("&tag_id[]=");
                 piwigoURL = piwigoURL + 'tags/' + tags_multiple.split(',').at(0); // Target the first tag only
             }
             else if (category !== undefined)
             {
-                piwigoWSURL = piwigoWSURL + "&method=pwg.categories.getImages&cat_id=" + category;
                 piwigoURL = piwigoURL + 'category/' + category;
             }
-
-            if (count > 0)
-                piwigoWSURL = piwigoWSURL + "&per_page=" + count;
 
             // Add a button with the URL to the gallery:
             $(`<div class="text-right">
                     <a  type="button" class="btn btn-primary btn-sm text-white" href="${piwigoURL}" target="_blank">Voir la galerie</a>
                 </div><br style="clear:both"/>`).insertAfter(piwigoDiv);
 
-            $.ajax({
-                    url: piwigoWSURL,
-                    dataType: 'json',
-                    method: "GET",
-            }).done(function (data) {
+            var api = new mw.Api();
+            api.post( {
+                'action': 'piwigosearch',
+                'tags': tags,
+                'tags_multiple': tags_multiple,
+                'category': category,
+                'search': search,
+                'count': count,
+                'site': site
+            } )
+            .done( function ( data ) {
+                console.log("piwigosearch:");
+                console.log(data);
 
                 var rowDiv = $('<div>').attr('class', 'row');
-                data.result.images.forEach(item => {
+                data.piwigosearch.result.result.images.forEach(item => {
 
                     var large = item.element_url;
                     var thumb = item.derivatives.small.url;
@@ -75,8 +86,7 @@
                 piwigoDiv.append(rowDiv);
 
                 baguetteBox.run('.showPiwigo');
-            });
-
+            } );
         }
 	};
 
@@ -89,6 +99,10 @@
 (function () {
 	$(document)
 		.ready(function () {
-            mw.PiwigoController.init();
+            mw.loader.using('mediawiki.api', function() {
+                // Call to the function that uses mw.Api
+                mw.PiwigoController.init();
+              } );
 		});
 }());
+
