@@ -51,11 +51,6 @@
                 piwigoURL = piwigoURL + 'category/' + category;
             }
 
-            // Add a button with the URL to the gallery:
-            $(`<div class="text-right">
-                    <a  type="button" class="btn btn-primary btn-sm text-white" href="${piwigoURL}" target="_blank">Voir la galerie</a>
-                </div><br style="clear:both"/>`).insertAfter(piwigoDiv);
-
             var api = new mw.Api();
             api.post( {
                 'action': 'piwigosearch',
@@ -67,23 +62,30 @@
                 'site': site
             } )
             .done( function ( data ) {
-                console.log("piwigosearch:");
-                console.log(data);
+                // console.log("piwigosearch:");
+                // console.log(data);
 
                 var rowDiv = $('<div>').attr('class', 'row');
-                data.piwigosearch.result.result.images.forEach(item => {
-
-                    var large = item.element_url;
-                    var thumb = item.derivatives.small.url;
+                data.piwigosearch.images.forEach(item => {
 
                     rowDiv.append($(`<div class="col-sm-12 col-md-4">
-                        <a class="lightbox" href="${large}">
-                            <img src="${thumb}" alt="Bridge">
+                        <a class="lightbox" href="${item.large}" data-caption="${item.caption}">
+                            <img src="${item.thumb}" alt="${item.caption}">
                         </a>
                     </div>`));
                 });
 
                 piwigoDiv.append(rowDiv);
+
+                // Add a button with the URL to the gallery:
+                if (data.piwigosearch.see_more == 'true')
+                    $(`<div class="text-right">
+                            <a  type="button" class="btn btn-primary btn-sm text-white" href="${piwigoURL}" target="_blank">Voir plus de photos</a>
+                        </div><br style="clear:both"/>`).insertAfter(piwigoDiv);
+                else
+                    $(`<div class="text-right">
+                        <a  type="button" class="btn btn-primary btn-sm text-white" href="${piwigoURL}" target="_blank">Voir la galerie</a>
+                        </div><br style="clear:both"/>`).insertAfter(piwigoDiv);
 
                 baguetteBox.run('.showPiwigo');
             } );
@@ -94,7 +96,6 @@
 
 	mw.PiwigoController = piwigo_controller;
 }() );
-
 
 (function () {
 	$(document)

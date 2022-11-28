@@ -39,12 +39,6 @@ class PiwigoSearch extends ApiBase {
 	public function execute() {
 		$params = $this->extractRequestParams();
 
-		// 'tags': tags,
-		// 'tags_multiple': tags_multiple,
-		// 'category': category,
-		// 'search': search,
-		// 'count': count,
-		// 'site': site
 		$tags = $params['tags'];
 		$tags_multiple = $params['tags_multiple'];
 		$category = $params['category'];
@@ -93,15 +87,42 @@ class PiwigoSearch extends ApiBase {
 
 		$data = curl_exec($ch);
 		$result = json_decode($data, true);
+		$images = array();
 
-		if (curl_errno($ch)) {
+		if (curl_errno($ch) || empty($result['result']['images']))
+		{
 			$r['error'] = curl_error($ch);
 		}
+		else
+		{
+			foreach ($result['result']['images'] as $anImage)
+			{
+				$newImage = array();
+				$newImage['large'] = $anImage['element_url'];
+				$newImage['thumb'] = $anImage['derivatives']['small']['url'];
+				$newImage['caption'] = '';
+
+				if (!empty($anImage['comment']))
+					$newImage['caption'] = htmlspecialchars($anImage['comment']);
+				else
+				{
+					$name_clean = strtolower(preg_replace('[^0-9a-zA-Z]', '', $anImage['name']));
+					$file_clean = strtolower(preg_replace('[^0-9a-zA-Z]', '', preg_replace('@\.(jpg|png|jpeg)@i', '', $anImage['file'])));
+					if ($name_clean == $file_clean)
+						$newImage['caption'] = htmlspecialchars($anImage['name']);
+				}
+
+				$newImage['caption'] = $anImage['name'];
+
+				$images[] = $newImage;
+			}
+		}
+
+		$r['ws_url'] = $piwigoWSURL;
+		$r['images'] = $images;
+		$r['see_more'] = ($count > 0 && $count == count($images)) ? 'true' : 'false';
 
 		curl_close($ch);
-
-		$r['result'] = $result;
-		$r['ws_url'] = $piwigoWSURL;
 
         $apiResult = $this->getResult();
         $apiResult->addValue( null, $this->getModuleName(), $r );
