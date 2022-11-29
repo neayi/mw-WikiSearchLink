@@ -112,8 +112,6 @@ class PiwigoSearch extends ApiBase {
 						$newImage['caption'] = htmlspecialchars($anImage['name']);
 				}
 
-				$newImage['caption'] = $anImage['name'];
-
 				$images[] = $newImage;
 			}
 		}
