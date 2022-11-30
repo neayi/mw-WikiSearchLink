@@ -22,6 +22,7 @@ namespace MediaWiki\Extension\Piwigo;
 use ApiBase;
 use ApiMain;
 use Wikimedia\ParamValidator\ParamValidator;
+use MediaWiki\MediaWikiServices;
 
 class PiwigoSearch extends ApiBase {
 
@@ -88,8 +89,18 @@ class PiwigoSearch extends ApiBase {
         $apiResult->addValue( null, $this->getModuleName(), $r );
 	}
 
+	/**
+	 * Get the images from piwigo. This will retry up to 3 times, and cache the results for 55h
+	 */
 	private function invokeWS($piwigoWSURL, $retry = 0)
 	{
+		$cache = MediaWikiServices::getInstance()->getMainObjectStash();
+		$cacheKey = $cache->makeKey( 'piwigo-ext', $piwigoWSURL );
+		$images = $cache->get( $cacheKey );
+
+		if (!empty($images))
+			return $images;
+
 		$ch = curl_init($piwigoWSURL);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -140,6 +151,8 @@ class PiwigoSearch extends ApiBase {
 		}
 
 		curl_close($ch);
+
+   		$cache->set( $cacheKey, $images, 200000 );
 
 		return $images;
 	}
