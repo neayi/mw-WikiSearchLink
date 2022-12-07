@@ -36,10 +36,9 @@ class Hooks
 			$matches = array();
 			if (preg_match('@"([^"]+)"@', $textValue, $matches))
 			{
-				$filter = str_replace('=', '^^', $matches[1]);
 				$text = preg_replace('@"[^"]+"@', '', $textValue);
 
-				$query['filters'] = $filter;
+				$query['filters'] = str_replace('&', '~~', str_replace('=', '^^', $matches[1]));
 				$query['order'] = 'desc';
 				$query['ordertype'] = 'Modification date';
 			}
