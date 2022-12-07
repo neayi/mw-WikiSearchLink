@@ -9,7 +9,5 @@ $magicWords = [];
 
 /** English (English) */
 $magicWords['en'] = [
-	'piwigo' => [ 0, 'piwigo' ]
+	'WikiSearchLink' => [ 0, 'WikiSearchLink' ]
 ];
-
-

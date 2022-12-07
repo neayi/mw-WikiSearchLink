@@ -1,9 +1,6 @@
 {
-	"name": "Piwigo",
+	"name": "WikiSearchLink",
 	"private": true,
-	"scripts": {
-		"test": "grunt test"
-	},
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.22.1",
 		"grunt": "^1.5.3",
@@ -17,6 +14,5 @@
 		"vendor/**"
 	],
 	"dependencies": {
-		"baguettebox.js": "^1.11.1"
 	}
 }

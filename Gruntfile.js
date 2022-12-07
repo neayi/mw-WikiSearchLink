@@ -21,22 +21,12 @@ module.exports = function ( grunt ) {
 				'!vendor/**'
 			]
 		},
-		banana: conf.MessagesDirs,
-
-		copy: {
-			dist: {
-			  expand: true,
-			  cwd: 'node_modules/baguettebox.js/dist',
-			  src: ['baguetteBox.min.css', 'baguetteBox.min.js'],
-			  dest: 'resources/ext.baguetteBox'
-			}
-		  }
+		banana: conf.MessagesDirs
 	} );
 
 	grunt.loadNpmTasks("grunt-contrib-copy");
 
 	grunt.registerTask( 'test', [ 'eslint', 'stylelint', 'banana' ] );
 	grunt.registerTask( 'default', 'test' );
-	grunt.registerTask( 'installBaguette', ['copy'] );
 };
 

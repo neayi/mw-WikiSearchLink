@@ -1,11 +1,11 @@
 <?php
 
-namespace MediaWiki\Extension\Piwigo\Tests;
+namespace MediaWiki\Extension\WikiSearchLink\Tests;
 
-use MediaWiki\Extension\Piwigo\Hooks;
+use MediaWiki\Extension\WikiSearchLink\Hooks;
 
 /**
- * @coversDefaultClass \MediaWiki\Extension\Piwigo\Hooks
+ * @coversDefaultClass \MediaWiki\Extension\WikiSearchLink\Hooks
  */
 class HooksTest extends \MediaWikiUnitTestCase {
 
@@ -14,7 +14,7 @@ class HooksTest extends \MediaWikiUnitTestCase {
 	 */
 	public function testOnBeforePageDisplayVandalizeIsTrue() {
 		$config = new \HashConfig( [
-			'PiwigoVandalizeEachPage' => true
+			'WikiSearchLinkVandalizeEachPage' => true
 		] );
 		$outputPageMock = $this->getMockBuilder( \OutputPage::class )
 			->disableOriginalConstructor()
@@ -24,7 +24,7 @@ class HooksTest extends \MediaWikiUnitTestCase {
 
 		$outputPageMock->expects( $this->once() )
 			->method( 'addHTML' )
-			->with( '<p>Piwigo was here</p>' );
+			->with( '<p>WikiSearchLink was here</p>' );
 		$outputPageMock->expects( $this->once() )
 			->method( 'addModules' )
 			->with( 'oojs-ui-core' );
@@ -41,7 +41,7 @@ class HooksTest extends \MediaWikiUnitTestCase {
 	 */
 	public function testOnBeforePageDisplayVandalizeFalse() {
 		$config = new \HashConfig( [
-			'PiwigoVandalizeEachPage' => false
+			'WikiSearchLinkVandalizeEachPage' => false
 		] );
 		$outputPageMock = $this->getMockBuilder( \OutputPage::class )
 			->disableOriginalConstructor()
